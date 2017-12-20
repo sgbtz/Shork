@@ -119,8 +119,6 @@ unsigned update_user(User * user){
 	cJSON * users = NULL;
 	cJSON * juser = NULL;
 	cJSON * nuser = NULL;
-	cJSON * npass = NULL;
-	cJSON * nfold = NULL;
 	unsigned success = OK;
 
 	// get structure of users
@@ -131,15 +129,12 @@ unsigned update_user(User * user){
 		success = ERROR;
 	}
 	else { // update user item
-		// Create cJSON objects to update the user
-		npass = cJSON_CreateString(user->password);
-		nfold = cJSON_CreateString(user->user_folder);
 		// Add created objects to user to be updated
-		cJSON_AddItemToObject(users, user->user_name, juser = cJSON_CreateObject());
-		cJSON_AddStringToObject(juser, "folderURL", user->user_folder);
-		cJSON_AddStringToObject(juser, "password", user->password);
+		nuser = cJSON_CreateObject();
+		cJSON_AddStringToObject(nuser, "folderURL", user->user_folder);
+		cJSON_AddStringToObject(nuser, "password", user->password);
 		// Replace old user with new
-		cJSON_ReplaceItemInObjectViaPointer(users, juser, nuser);
+		cJSON_ReplaceItemInObject(users, user->user_name, nuser);
 		if(!(set_json(cJSON_Print(users), USERS_URL))) // modify json database
 			success = ERROR;
 

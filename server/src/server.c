@@ -14,6 +14,6 @@ int main() {
 	scanf("%s",user->password);
 	//auth_user(user);
 	//create_user(user);
-	update_user(user);
+	delete_user(user);
 	return 0;
 }
