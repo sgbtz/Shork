@@ -12,6 +12,8 @@ int main() {
 	scanf("%s",user->user_name);
 	printf("Contraseña: ");
 	scanf("%s",user->password);
-	auth_user(user);
+	//auth_user(user);
+	//create_user(user);
+	update_user(user);
 	return 0;
 }

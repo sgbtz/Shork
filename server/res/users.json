@@ -1,6 +1,10 @@
 {
-	"Jhon" : {
-		"folderURL" : "example/example",
-		"password"	: "password"
+	"Jhon":	{
+		"folderURL":	"exp/exp",
+		"password":	"password"
+	},
+	"sebas":	{
+		"folderURL":	"",
+		"password":	"guapo"
 	}
 }
