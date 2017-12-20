@@ -8,7 +8,7 @@
 #define MAX_UNAME			16
 #define MAX_PASS			16
 #define MAX_FOLD_URL		64
-#define TAM_MEMORY			100
+
 
 /*** TYPE DEFINITIONS ****************/
 typedef struct User {
@@ -71,5 +71,33 @@ cJSON * get_json();
 /*****************************************/
 
 //#include "./controllers/user_controller.c"
+
+/*Recive the number of users can be connect at the same time.
+** Return if an error was happened.
+** 1 error openning semaphore
+** 2 error creating share memory
+** 3 error creating tail
+*/
+int init(int users);
+
+/*This function delete all the resources which the programme initialize.
+** Return an error was happened
+** 1 error closing semaphore
+** 2 error deleting share memory
+** 3 error deleting tail
+*/
+
+int end();
+
+/*Create a tail and return his ID*/
+
+int co_cola(key_t clave);
+
+/*Create a semaphore and return his ID*/
+sem_t *co_sem(char* name, int tam);
+
+
+/*Create a share memory and return his ID*/
+int co_mm(key_t clave, int tam);
 
 #endif
