@@ -74,6 +74,7 @@ cJSON * get_json();
 
 /*Recive the number of users can be connect at the same time.
 ** Return if an error was happened.
+** 0 no error
 ** 1 error openning semaphore
 ** 2 error creating share memory
 ** 3 error creating tail
@@ -82,6 +83,7 @@ int init(int users);
 
 /*This function delete all the resources which the programme initialize.
 ** Return an error was happened
+** 0 no error
 ** 1 error closing semaphore
 ** 2 error deleting share memory
 ** 3 error deleting tail
@@ -99,5 +101,9 @@ sem_t *co_sem(char* name, int tam);
 
 /*Create a share memory and return his ID*/
 int co_mm(key_t clave, int tam);
+
+ /*Deleta a tail with msgid ID and return 3 if an error was happened*/
+int dt_c(int msgid);
+
 
 #endif

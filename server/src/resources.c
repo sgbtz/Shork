@@ -70,15 +70,12 @@ int dt_mm(key_t clave){
 
 /*This function delete a tail which was create. Recive the tail's key and return if an error happens*/
 
-int dt_c(key_t clave){
+int dt_c(int msgid){
 
 	int error = 0;
-	int msgid = co_cola(clave);
 	
-	if(msgid == -1){
-		error = ERROR_COLA;
-	}
-	else if ( msgctl(msgid,IPC_RMID, NULL) == -1){
+	
+	if ( msgctl(msgid,IPC_RMID, NULL) == -1){
 		error = ERROR_DELC;
 	}
 	return(error);
@@ -148,7 +145,8 @@ int end(){
 	error = dt_mm(clavem);
 
 	key_t clavec = ftok("cola",'P');
-	error = dt_c(clavec);
+	int msgid = co_cola(clavec);
+	error = dt_c(msgid);
 
 	return(error);
 
