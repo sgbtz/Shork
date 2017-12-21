@@ -102,8 +102,12 @@ sem_t *co_sem(char* name, int tam);
 /*Create a share memory and return his ID*/
 int co_mm(key_t clave, int tam);
 
- /*Deleta a tail with msgid ID and return 3 if an error was happened*/
+ /*Delete a tail with his msgid ID and return 3 if an error was happened*/
 int dt_c(int msgid);
+
+
+/*Delete a share memory with his shmid ID and return 2 if an error was happened*/
+int dt_mm(int shmid);
 
 
 #endif

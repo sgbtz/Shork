@@ -38,7 +38,7 @@ sem_t *co_sem(char* name, int tam){
 
 int co_mm(key_t clave, int tam){
 
-	int shmid = shmget(clave,tam,IPC_CREAT|IPC_EXCL|0660);
+	int shmid = shmget(clave,tam,IPC_CREAT|0660);
 
 	return(shmid);
 }
@@ -53,15 +53,11 @@ int co_cola(key_t clave){
 
 /*This function delete a share memory which was create.Recive the share memory's key and return if an error happens.*/
 
-int dt_mm(key_t clave){
+int dt_mm(int shmid){
 
 	int error = 0;
-	int shmid = co_mm(clave,TAM_MEMORY);
 
-	if(shmid == -1) {
-       error = ERROR_MM;	
-	}
-    else if ( shmctl(shmid,IPC_RMID,NULL) == -1){	
+	if(shmctl(shmid,IPC_RMID,NULL) == -1){	
  		error = ERROR_DELMM;
     }
 
@@ -142,7 +138,8 @@ int end(){
 
 	
 	key_t clavem = ftok("memory",'A');
-	error = dt_mm(clavem);
+	int shmid = co_mm(clavem,TAM_MEMORY);
+	printf("%d\n",error);
 
 	key_t clavec = ftok("cola",'P');
 	int msgid = co_cola(clavec);
