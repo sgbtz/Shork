@@ -3,6 +3,7 @@
 
 #include "../lib/cjson/cJSON.h"
 #include "../lib/cjson/cJSON.c"
+#include <semaphore.h>
 
 /*** DEFINITIONS *********************/
 #define MAX_UNAME			16
