@@ -77,7 +77,7 @@ unsigned create_user(User * user){
 		if(!(set_json(cJSON_Print(users), USERS_URL))) // modify json database
 			success = ERROR;
 		// Create user folder
-		if(mkdir(user->user_folder, 0600))
+		if(mkdir(user->user_folder, 0777))
 			success = ERROR;
 
 		cJSON_Delete(users); // close json object
