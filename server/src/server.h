@@ -26,7 +26,16 @@ typedef struct File{
 
 /*** FUNCTIONS DEFINITIONS ****************/
 
-// user_controller.c
+// admin/menu.c
+/*****************************************/
+/*
+** Admin menu, here the admin can create,
+** delete or modify users
+*/
+void menu();
+/*****************************************/
+
+// controller/user_controller.c
 /*****************************************/
 /* 
 ** Recieves a User structure with a password and
@@ -71,8 +80,8 @@ unsigned update_user(User * user);
 cJSON * get_json();
 /*****************************************/
 
-//#include "./controllers/user_controller.c"
-
+// resources.c
+/*****************************************/
 /*Recive the number of users can be connect at the same time.
 ** Return if an error was happened.
 ** 0 no error
@@ -109,6 +118,6 @@ int dt_c(int msgid);
 
 /*Delete a share memory with his shmid ID and return 2 if an error was happened*/
 int dt_mm(int shmid);
-
+/******************************************/
 
 #endif

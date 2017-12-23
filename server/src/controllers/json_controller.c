@@ -9,6 +9,7 @@
 
 /*** DEFINES *************************/
 #define ERROR_READ		"ERROR: No such file or directory: %s\n"
+
 /*
 ** Reads a file and parses its content to json and
 ** returns it 

@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 /*** DEFINES *************************/
-#define USERS_URL			"../res/users.json"
-#define ERROR_USER		"ERROR: User %s not found\n"
+#define USERS_URL			"../res/db/users.json"
 #define ERROR 				0
 #define OK						1
+#define FOLDER_URL		"../res/users/"
 
 /*** FUNCTIONS ***********************/
 /* 
@@ -62,6 +64,9 @@ unsigned create_user(User * user){
 	cJSON * juser = NULL;
 	unsigned success = OK;
 
+	// Associate folder to user
+	strcat(user->user_folder,FOLDER_URL);
+	strcat(user->user_folder,user->user_name);
 	// get structure of users
 	if (!(users = get_json(USERS_URL)))
 		success = ERROR;
@@ -70,6 +75,9 @@ unsigned create_user(User * user){
 		cJSON_AddStringToObject(juser, "folderURL", user->user_folder);
 		cJSON_AddStringToObject(juser, "password", user->password);
 		if(!(set_json(cJSON_Print(users), USERS_URL))) // modify json database
+			success = ERROR;
+		// Create user folder
+		if(mkdir(user->user_folder, 0600))
 			success = ERROR;
 
 		cJSON_Delete(users); // close json object
@@ -88,6 +96,8 @@ unsigned create_user(User * user){
 unsigned delete_user(User * user){
 	cJSON * users = NULL;
 	cJSON * juser = NULL;
+	cJSON * fold  = NULL;
+	char folder[MAX_FOLD_URL];
 	unsigned success = OK;
 
 	// get structure of users
@@ -98,8 +108,14 @@ unsigned delete_user(User * user){
 		success = ERROR;
 	}
 	else { // delete user item
+		// Get user folder to delete
+		fold = cJSON_GetObjectItemCaseSensitive(juser, "folderURL");
+		strncpy(folder,&cJSON_Print(fold)[1],strlen(FOLDER_URL)+strlen(user->user_name));
 		cJSON_DeleteItemFromObjectCaseSensitive(users, user->user_name);
 		if(!(set_json(cJSON_Print(users), USERS_URL))) // modify json database
+			success = ERROR;
+		// Delete user folder
+		if (rmdir(folder))
 			success = ERROR;
 
 		cJSON_Delete(users); // close json object

@@ -77,5 +77,4 @@ void menu(){
 				break;
 		}
 	}
-	return 0;
 }
