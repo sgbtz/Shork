@@ -9,6 +9,8 @@
 #define MAX_UNAME			16
 #define MAX_PASS			16
 #define MAX_FOLD_URL		64
+#define TAM_MEMORY 100
+
 
 
 /*** TYPE DEFINITIONS ****************/
@@ -19,8 +21,8 @@ typedef struct User {
 } User;
 
 typedef struct File{
-	char *content;
-	int status;
+	char *name;
+	unsigned status;
 }File;
 
 
