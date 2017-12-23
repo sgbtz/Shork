@@ -1,4 +1,4 @@
-#include "server.h"
+#include "./server.h"
 
 #include <semaphore.h>
 #include <fcntl.h>
