@@ -10,7 +10,7 @@
 #include <string.h>
 
 /*** DEFINES *************************/
-#define USERS_URL			"../../res/users.json"
+#define USERS_URL			"../res/users.json"
 #define ERROR_USER		"ERROR: User %s not found\n"
 #define ERROR 				0
 #define OK						1
