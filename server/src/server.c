@@ -13,6 +13,7 @@ int main(void) {
 	pid_t pid = -1; // child/parent process id
 
 	// Create the needed resources
+	init();
 	/* to-do: check resources.c and put init() here */
 	// Create a child process to manage the requests
 	pid = fork();

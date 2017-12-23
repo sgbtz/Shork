@@ -22,7 +22,7 @@ typedef struct User {
 
 typedef struct File{
 	char *name;
-	int status;
+	unsigned status;
 }File;
 
 

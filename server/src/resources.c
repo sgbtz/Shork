@@ -18,7 +18,6 @@
 #define ERROR_CSEM 1
 #define ERROR_DELMM 2
 #define ERROR_DELC 3
-#define TAM_MEMORY 100
 
 
 
@@ -80,21 +79,19 @@ int dt_c(int msgid){
 
 /*This function initialize a programme which need semaphore, share memory and tails. */
 
-int init(int users){
+int init(){
 
 	/* Creation of two semaphores. The first will have the number of the users who can be connect at
 		the same time. The second will have the number of the users who can use the share folder*/
 
-	sem_t *users_on, *mutex=NULL;
+	sem_t *mutex=NULL;
 	int error = 0;
 
-	users_on =co_sem("users", users);
 	mutex = co_sem("mutex", RC);
-	if(users_on == NULL || mutex == NULL) {
+	if(mutex == NULL) {
 		error = ERROR_OSEM;
 	}
 	else{
-		sem_close(users_on);
 		sem_close(mutex);
 	}
 
@@ -129,10 +126,9 @@ return(error);
 int end(){
 	
 	int error = 0;
-	int error1 = sem_unlink("users");
 	int error2 = sem_unlink("mutex");
 
-	if (error1 != 0 || error2 != 0){
+	if (error2 != 0){
 		error = ERROR_CSEM;
 	}
 
