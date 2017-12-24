@@ -17,6 +17,7 @@
 #define OK						1
 #define FOLDER_URL		"../res/users/"
 
+
 /*** FUNCTIONS ***********************/
 /* 
 ** Recieves a User structure with a password and

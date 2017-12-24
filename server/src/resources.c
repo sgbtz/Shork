@@ -1,5 +1,4 @@
 #include "./server.h"
-
 #include <semaphore.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -9,6 +8,8 @@
 #include <string.h> 
 #include <ctype.h> 
 #include <sys/msg.h> 
+#include <dirent.h>
+#include <sys/types.h>
 
 
 #define ERROR_OSEM 1
@@ -20,6 +21,36 @@
 #define ERROR_DELC 3
 
 
+
+
+/*Map the share memory with all the files in the route since the variable i. Return the share memory mapped*/
+
+File *map_folder(char* route, int shmid, int i){
+
+	File *file = NULL;
+	file = shmat(shmid,NULL,0);
+	DIR *actual = opendir(route);
+	struct dirent *aux;
+	DIR *actual;
+	while((aux = readdir(actual)) != NULL){
+		file[i].name = aux->d_name;
+		file[i].status = 1;
+		i++;
+	}
+	return file;	
+}
+
+/*Search if the file with the same name that "name" is free*/
+int used(char *name, File *file){
+	int status = 0;
+
+	while(file[i].name != NULL){
+		if( file[i].name == name){
+			status = 1;
+		}
+	}
+	return status;
+}
 
 
 /*This function create or open a semaphore.Recive the name of the semaphore
@@ -81,8 +112,7 @@ int dt_c(int msgid){
 
 int init(){
 
-	/* Creation of two semaphores. The first will have the number of the users who can be connect at
-		the same time. The second will have the number of the users who can use the share folder*/
+	/* Create a semaphore. This semaphore have the number of users who can entry in the share memory*/
 
 	sem_t *mutex=NULL;
 	int error = 0;
@@ -114,6 +144,8 @@ int init(){
    	if(co_cola(clavec) == -1){
    		error = ERROR_COLA;
    	}
+
+
    	
 return(error);
 

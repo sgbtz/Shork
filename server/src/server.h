@@ -94,7 +94,7 @@ cJSON * get_json();
 int init(int users);
 
 /*This function delete all the resources which the programme initialize.
-** Return an error was happened
+** Return an error happened
 ** 0 no error
 ** 1 error closing semaphore
 ** 2 error deleting share memory
@@ -114,12 +114,19 @@ sem_t *co_sem(char* name, int tam);
 /*Create a share memory and return his ID*/
 int co_mm(key_t clave, int tam);
 
- /*Delete a tail with his msgid ID and return 3 if an error was happened*/
+ /*Delete a tail with his msgid ID and return 3 if an error happened*/
 int dt_c(int msgid);
 
 
-/*Delete a share memory with his shmid ID and return 2 if an error was happened*/
+/*Delete a share memory with his shmid ID and return 2 if an error happened*/
 int dt_mm(int shmid);
+
+
+/*Map the share memory with all the files in the route since the variable i. Return the share memory mapped*/
+File *map_folder(char* route, int shmid, int i);
+
+/*Search if the file with the same name that "name" is free and return the status*/
+int used(char *name, File *file);
 /******************************************/
 
 #endif
