@@ -46,7 +46,8 @@ int used(char *name, File *file){
 
 	while(file[i].name != NULL){
 		if( file[i].name == name){
-			status = 1;
+			if (file[i].status == 1)
+				status =1;
 		}
 	}
 	return status;
