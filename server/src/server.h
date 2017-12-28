@@ -8,23 +8,34 @@
 /*** DEFINITIONS *********************/
 #define MAX_UNAME			16
 #define MAX_PASS			16
-#define MAX_FOLD_URL		64
-#define TAM_MEMORY 100
-
+#define MAX_FOLD_URL	64
+#define TAM_MEMORY 		100
+#define MAX_SEND_SIZE 200
 
 
 /*** TYPE DEFINITIONS ****************/
-typedef struct User {
+typedef struct {
 	char password[MAX_PASS];
 	char user_name[MAX_UNAME];
 	char user_folder[MAX_FOLD_URL];
 } User;
 
-typedef struct File{
+typedef struct {
 	char *name;
 	unsigned status;
 }File;
 
+typedef struct {
+	long mtype;
+	char user_name[MAX_UNAME];
+	char password[MAX_PASSWORD];
+} LogReq;
+
+typedef struct {
+	long mtype;
+	User user;
+	unsigned error; // 0 - if error ; 1 - if not error
+} LogRes;
 
 /*** FUNCTIONS DEFINITIONS ****************/
 
@@ -128,5 +139,36 @@ File *map_folder(char* route, int shmid, int i);
 /*Search if the file with the same name that "name" is free and return the status*/
 int used(char *name, File *file);
 /******************************************/
+
+// admin/menu.c
+/*****************************************/
+/*
+** Admin menu, here the admin can create,
+** delete or modify users
+*/
+void menu();
+/*****************************************/
+
+// controller/log_controller.c
+/*****************************************/
+/*
+** Wait for login request recived within the share tail
+** auth the user and return a response
+** -----------------------------------
+** Return within the tail "username":
+** - "username -1" if failed
+** - "username /userfolder" if correct
+*/
+void login();
+/*
+** Recive a user an create a connection
+** if the parameters are ok.
+** ------------------------------------
+** Send a message to client:
+**  - OK if there have been no error
+**	- ERROR if auth failed
+*/
+void * connection(User * user);
+/*****************************************/
 
 #endif

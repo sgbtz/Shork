@@ -14,7 +14,6 @@ int main(void) {
 
 	// Create the needed resources
 	init();
-	/* to-do: check resources.c and put init() here */
 	// Create a child process to manage the requests
 	pid = fork();
 
@@ -23,7 +22,7 @@ int main(void) {
 			printf("Error during the execution\n");
 			break;
 		case 0: // child process
-			/* to-do: function from req_controller.c goes here */
+			login();
 			break;
 		default: // parent process
 			menu();
