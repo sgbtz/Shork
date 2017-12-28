@@ -4,7 +4,6 @@
 
 /*APPLICATION  FILES*/
 #include "../server.h"
-#include "../controllers/user_controller.c"
 
 
 /*INCLUDES*/

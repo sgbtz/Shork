@@ -10,7 +10,7 @@
 #define MAX_PASS			16
 #define MAX_FOLD_URL	64
 #define TAM_MEMORY 		100
-#define MAX_SEND_SIZE 200
+#define MAX_USER_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL
 
 
 /*** TYPE DEFINITIONS ****************/
@@ -28,7 +28,7 @@ typedef struct {
 typedef struct {
 	long mtype;
 	char user_name[MAX_UNAME];
-	char password[MAX_PASSWORD];
+	char password[MAX_PASS];
 } LogReq;
 
 typedef struct {
@@ -102,7 +102,7 @@ cJSON * get_json();
 ** 2 error creating share memory
 ** 3 error creating tail
 */
-int init(int users);
+int init();
 
 /*This function delete all the resources which the programme initialize.
 ** Return an error happened
@@ -153,22 +153,18 @@ void menu();
 /*****************************************/
 /*
 ** Wait for login request recived within the share tail
-** auth the user and return a response
-** -----------------------------------
-** Return within the tail "username":
-** - "username -1" if failed
-** - "username /userfolder" if correct
+** auth the user and return a response in a thread
 */
 void login();
 /*
 ** Recive a user an create a connection
 ** if the parameters are ok.
 ** ------------------------------------
-** Send a message to client:
+** Return within the tail:
 **  - OK if there have been no error
 **	- ERROR if auth failed
 */
-void * connection(User * user);
+void * connection(void * con);
 /*****************************************/
 
 #endif

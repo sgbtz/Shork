@@ -3,6 +3,8 @@
 /*** APPLICATION FILES ***************/
 #include "./server.h"
 #include "./admin/menu.c"
+#include "./resources.c"
+#include "./controllers/log_controller.c"
 
 /*** INCLUDES ************************/
 #include <stdio.h>
