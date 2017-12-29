@@ -5,7 +5,7 @@
 #include "./admin/menu.c"
 #include "./resources.c"
 #include "./controllers/log_controller.c"
-#include "./controllers/th_controller.c"
+//#include "./controllers/th_controller.c"
 
 /*** INCLUDES ************************/
 #include <stdio.h>
@@ -25,7 +25,7 @@ int main(void) {
 			printf("Error during the execution\n");
 			break;
 		case 0: // child process
-			login()
+			login();
 			break;
 		default: // parent process
 			menu();

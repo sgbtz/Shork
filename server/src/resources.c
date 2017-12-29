@@ -127,7 +127,7 @@ int init(){
 
 	/*Creation of the share memory*/
 
-	key_t clavem=ftok("memory",'A'); 
+	key_t clavem=ftok("../res/share/.",'A'); 
 
 
    	
@@ -138,7 +138,7 @@ int init(){
 
    	/*Creation of the tail*/
 
-   	key_t clavec = ftok("cola", 'P');
+   	key_t clavec = ftok("../res/share/.", 'P');
 
    	if(co_cola(clavec) == -1){
    		error = ERROR_COLA;
@@ -164,11 +164,11 @@ int end(){
 	}
 
 	
-	key_t clavem = ftok("memory",'A');
+	key_t clavem = ftok("../res/share/.",'A');
 	int shmid = co_mm(clavem,TAM_MEMORY);
 	printf("%d\n",error);
 
-	key_t clavec = ftok("cola",'P');
+	key_t clavec = ftok("../res/share/.",'P');
 	int msgid = co_cola(clavec);
 	error = dt_c(msgid);
 

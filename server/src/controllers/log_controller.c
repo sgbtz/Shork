@@ -3,12 +3,13 @@
 /*** APPLICATION FILES ***************/
 #include "../server.h"
 #include "./user_controller.c"
-#include "./th_controller.c"
+//#include "./th_controller.c"
 
 /*** INCLUDES ************************/
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include <sys/msg.h>
 
@@ -41,7 +42,7 @@ void login() {
 	pthread_t conn[MAX_THREADS];
 	Conn * info = malloc(MAX_USER_SIZE + sizeof(int));
 
-	key = ftok("cola",'P');
+	key = ftok("../res/share/.",'P');
 	tail = co_cola(key);
 	// Config attributes for threads
 	pthread_attr_init(&attr);

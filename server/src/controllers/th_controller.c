@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 
 /***APPLICATION FILES**/
-#include "./log_controller"
+//#include "./log_controller"
 
 
 /***DEFINES***/

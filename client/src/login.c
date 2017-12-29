@@ -6,6 +6,9 @@
 /*** INCLUDES ************************/
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/msg.h>
 
 /*** DEFINES *************************/
 #define REQ 1 // Login request will be type 1
@@ -24,13 +27,13 @@
 void login() {
 	int tail = 0; // users tail id
 	key_t key; // key for the tail
-	User * user;
-	LogReq * req; // request goes here
-	LogRes * res; // response goes here
-	success = ERROR;
+	User * user = malloc(MAX_USER_SIZE);
+	LogReq * req = malloc(MAX_REQ_SIZE); // request goes here
+	LogRes * res = malloc(MAX_RES_SIZE); // response goes here
+	unsigned success = ERROR;
 
-	key = ftok("cola",'P');
-	tail = co_cola(key);
+	key = ftok("../../server/res/share/.",'P');
+	tail = msgget(key, IPC_CREAT);
 
  	// Ask for username and pass while they are incorrect
 	while(!success) {
@@ -40,15 +43,18 @@ void login() {
 		scanf("%s", req->password);
 		req->mtype = REQ;
 		// Send the request
-		msgsend(tail, req, MAX_RES_SIZE, 0)
+		msgsnd(tail, req, MAX_REQ_SIZE, 0);
 		// Wait for the response to the correct user
 		do {
-			msgrcv(tail, res, MAX_REQ_SIZE, REQ, 0);
-		} while(!strcmp(req->user_name, res->user.user_name));
+			msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
+		} while(strcmp(req->user_name, res->user.user_name));
 		// Checks the result
 		if (res->error) {
 			success = OK;
-		}
+			*user = res->user;
+			printf("OK\n");
+		} else
+			printf("ERROR\n");
 	}
 
 }
