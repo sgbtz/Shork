@@ -167,4 +167,23 @@ void login();
 void * connection(void * con);
 /*****************************************/
 
+// controller/file_controller.c
+/* 
+**Copy a file in orig to dest . Return error:
+** 1: error open origin file
+** 2: error using fstat
+** 3: error with the size of the new file
+** 4: error open new directory
+** 5: error closing memory mapped
+** 0: no error
+*/
+int move(char* orig, char* dest);
+
+/*Delete name in rt.Return:
+** 1: error
+** 0: no error
+*/
+int dlt(char *rt, char *name);
+
+
 #endif
