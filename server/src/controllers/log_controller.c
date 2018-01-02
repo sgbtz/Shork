@@ -21,6 +21,7 @@
 #define MAX_THREADS 10
 #define MAX_REQ_SIZE MAX_UNAME + MAX_PASS + sizeof(long) // Max size of the request msg
 #define MAX_RES_SIZE MAX_USER_SIZE + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
+#define FOLDER_URL		"../res/users/"
 
 /*** TYPE DEFINITIONS ****************/
 typedef struct {
@@ -75,6 +76,9 @@ void login() {
 void * connection(void * con) {
 	LogRes * res = malloc(MAX_RES_SIZE);
 	Conn * conn = (Conn *) con;
+	int ptail = 0;
+	key_t pkey = 0;
+	char folder[MAX_FOLD_URL];
 	// Checks if the parameters are OK
 	if (!auth_user(&(conn->user))) { // if not
 		res->user = conn->user;
@@ -82,10 +86,19 @@ void * connection(void * con) {
 		res->mtype = RES;
 		msgsnd(conn->tail, res, MAX_RES_SIZE, 0); // return an error
 	} else { // if yes
+		// Concatenate folder url to create private tail
+		strcat(folder,FOLDER_URL);
+		strcat(folder,conn->user.user_name);
+		// Generate key and tail
+		pkey = ftok(folder,'A');
+		ptail = co_cola(pkey);
+		// Pass parameters to the user
+		res->ptail = ptail;
 		res->user = conn->user;
 		res->error = OK;
 		res->mtype = RES;
 		msgsnd(conn->tail, res, MAX_RES_SIZE, 0); // return success
+		// TO-DO: Call to th_controller passing the private tail id as parameter
 	}
 
 	pthread_exit(NULL);

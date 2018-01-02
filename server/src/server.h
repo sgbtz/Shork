@@ -35,6 +35,7 @@ typedef struct {
 	long mtype;
 	User user;
 	unsigned error; // 0 - if error ; 1 - if not error
+	int ptail; // private tail ids
 } LogRes;
 
 /*** FUNCTIONS DEFINITIONS ****************/
