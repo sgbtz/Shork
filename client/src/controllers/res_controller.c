@@ -19,14 +19,30 @@
 #define MAX_RES_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
 #define MOVE "move"
 #define DEL "delete"
-#define FOLDER_URL		"../res/users/"
 
 /*** FUNCTIONS ***********************/
+/*
+** Recive either the private or the
+** shared tail, send within this tail
+** a message to the server asking for
+** a move action
+** -----------------------------------
+** Return within the tail the result
+** of the operation
+*/
 void move(int tail) {
 
 }
 
-/**/
+/*
+** Recive either the private or the
+** shared tail, send within this tail
+** a message to the server asking for
+** a delete action
+** -----------------------------------
+** Return within the tail the result
+** of the operation
+*/
 void delete(int tail) {
 
 }

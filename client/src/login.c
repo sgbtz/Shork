@@ -25,7 +25,7 @@
 ** until the login successes
 */
 void login() {
-	int tail = 0; // users tail id
+	int tail = 0, ptail = 0;; // users tail id
 	key_t key; // key for the tail
 	User * user = malloc(MAX_USER_SIZE);
 	LogReq * req = malloc(MAX_REQ_SIZE); // request goes here
@@ -49,11 +49,14 @@ void login() {
 			msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
 		} while(strcmp(req->user_name, res->user.user_name));
 		// Checks the result
-		if (res->error) {
+		if (res->error) { // if ok
 			success = OK;
 			*user = res->user;
+			ptail = res->ptail;
 			printf("OK\n");
-		} else
+			// Call menu passing the private tail id
+			menu(ptail);
+		} else // if wrong
 			printf("ERROR\n");
 	}
 
