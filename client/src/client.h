@@ -54,7 +54,7 @@ void login();
 ** Return within the tail the result
 ** of the operation
 */
-void move(int tail, unsigned scope, User * user, unsigned ud)
+void move(int tail, unsigned scope, User * user, unsigned ud);
 /*
 ** Recive either the private or the
 ** shared tail, send within this tail
@@ -71,5 +71,12 @@ void delt(int tail, unsigned scope, User * user);
 ** shared dir or the private one
 */
 void show(unsigned scope, User * user);
+
+// user/menu.c
+
+/*Show the client's menu to the user. Need the id of the tail
+** and a struct with the information of the userç
+*/
+void menu(int msgid, User *user);
 
 #endif
