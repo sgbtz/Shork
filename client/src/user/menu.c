@@ -60,7 +60,7 @@ void menu(int msgid, User *user){
 					move(msgid,scope,user->user_name,UPL);
 					break;
 				case 4:
-					delete(msgid,scope,user->user_name);	
+					dlt(msgid,scope,user->user_name);	
 					break;
 				case 5:
 					sscop=0;
