@@ -32,43 +32,4 @@ typedef struct {
 	unsigned error; // 0 - if error ; 1 - if not error
 } LogRes;
 
-/*** FUNCTIONS DEFINITIONS ****************/
-
-// login.c
-/*****************************************/
-/*
-** Ask user for username and pass and
-** pass it to the server within a tail
-** until the login successes
-*/
-void login();
-
-// controllers/res_controller.c
-/*****************************************/
-/*
-** Recive either the private or the
-** shared tail, send within this tail
-** a message to the server asking for
-** a move action
-** -----------------------------------
-** Return within the tail the result
-** of the operation
-*/
-void move(int tail, unsigned scope, User * user, unsigned ud)
-/*
-** Recive either the private or the
-** shared tail, send within this tail
-** a message to the server asking for
-** a delete action
-** -----------------------------------
-** Return within the tail the result
-** of the operation
-*/
-void delt(int tail, unsigned scope, User * user);
-/*
-** Recive the scope and the user
-** shows the files either in the
-** shared dir or the private one
-*/
-void show(unsigned scope, User * user);
 #endif
