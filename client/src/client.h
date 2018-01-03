@@ -32,4 +32,9 @@ typedef struct {
 	unsigned error; // 0 - if error ; 1 - if not error
 } LogRes;
 
+
+/*Show the client's menu to the user. Need the id of the tail
+** and a struct with the information of the user*/
+void menu(int msgid, User *user);
+
 #endif
