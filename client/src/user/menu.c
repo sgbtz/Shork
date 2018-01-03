@@ -26,7 +26,7 @@ int showmenu(){
 		printf("4. DELETE A FILE\n");
 		printf("5. CHANGE THE SCOPE\n");
 		printf("6.EXIT\n");
-		scanf("Introduce a numer %d", &action);
+		scanf("Introduce a number %d", &action);
 
 		return action;
 }
@@ -43,7 +43,7 @@ void menu(int msgid, User *user){
 		printf("Welcome. What folder do you want to open? Enter the number:\n");
 		printf("1.SHARE\n");
 		printf("2.PRIVATE\n");
-		scanf("Introduce a number %u",scope);
+		scanf("Introduce a number %u",&scope);
 		sscop = 1;
 		
 		while(sscop){
@@ -51,16 +51,16 @@ void menu(int msgid, User *user){
 			action = showmenu();
 			switch(action){
 				case 1:
-					show(user->user_name,scope);
+					show(scope,user);
 					break;
 				case 2:
-					move(msgid,scope,user->user_name,DOWNL);
+					move(msgid,scope,user,DOWNL);
 					break;
 				case 3:
-					move(msgid,scope,user->user_name,UPL);
+					move(msgid,scope,user,UPL);
 					break;
 				case 4:
-					dlt(msgid,scope,user->user_name);	
+					delt(msgid,scope,user);	
 					break;
 				case 5:
 					sscop=0;
