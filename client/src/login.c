@@ -47,6 +47,8 @@ void login() {
 		// Wait for the response to the correct user
 		do {
 			msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
+			if(strcmp(req->user_name, res->user.user_name))
+				msgsnd(tail, res, MAX_RES_SIZE, 0);
 		} while(strcmp(req->user_name, res->user.user_name));
 		// Checks the result
 		if (res->error) { // if ok
@@ -55,7 +57,7 @@ void login() {
 			ptail = res->ptail;
 			printf("OK\n");
 			// Call menu passing the private tail id
-			menu(ptail);
+			menu(ptail,user);
 		} else // if wrong
 			printf("ERROR\n");
 	}

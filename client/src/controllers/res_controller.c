@@ -11,14 +11,31 @@
 #include <sys/msg.h>
 
 /*** DEFINES *************************/
-#define REQ 1 // Login request will be type 1
-#define RES 2 // Login response will be type 2
+#define REQ 1 // Request will be type 1
+#define RES 2 // Response will be type 2
 #define ERROR 0
 #define OK 1
-#define MAX_REQ_SIZE MAX_UNAME + MAX_PASS + sizeof(long) // Max size of the request msg
-#define MAX_RES_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
-#define MOVE "move"
-#define DEL "delete"
+#define MAX_OPT_SIZE MAX_USER_SIZE + 2*MAX_FOLD_URL + sizeof(long) + 2*sizeof(unsigned)
+#define MAX_RES_SIZE sizeof(long) + sizeof(unsigned)
+#define MOVE 1
+#define DEL  2
+#define PUBLIC 1
+#define PRIVATE 2
+#define URL_PUBLIC "../res/share"
+/*** TYPE DEFINITIONS ****************/
+typedef struct {
+	long mtype; // REQ
+	unsigned scope; // public/private
+	unsigned cmd; // move/delete
+	User user;
+	char org[MAX_FOLD_URL];
+	char dest[MAX_FOLD_URL];
+} Opt;
+
+typedef struct {
+	long mtype; // RES
+	unsigned error; // ERROR/OK
+} Res;
 
 /*** FUNCTIONS ***********************/
 /*
@@ -30,8 +47,44 @@
 ** Return within the tail the result
 ** of the operation
 */
-void move(int tail) {
-
+void move(int tail, unsigned scope, User * user, unsigned ud) {
+	Opt * opt = malloc(MAX_OPT_SIZE);
+	Res * res = malloc(MAX_RES_SIZE);
+	char org[MAX_FOLD_URL];
+	// Ask for a file to be moved
+	printf("What file do you want to move?: ");
+	scanf("%s", org);
+	// Set parameters of the struct
+	opt->mtype = REQ;
+	opt->scope = scope;
+	opt->cmd = MOVE;
+	if (!ud) { // if download
+		if (scope == PUBLIC)
+			strcat(opt->org, URL_PUBLIC);
+		else
+			strcat(opt->org, user->user_folder);
+		strcat(opt->org, "/");
+		strcat(opt->org, org);
+		strcat(opt->dest, getcwd()); // move to working directory
+	} else { // if upload
+		if (scope == PUBLIC)
+			strcat(opt->dest, URL_PUBLIC);
+		else
+			strcat(opt->dest, user->user_folder);
+		strcat(opt->org, getcwd()); // move from working directory
+		strcat(opt->org, "/");
+		strcat(opt->org, org);
+	}
+	opt->user = *user;
+	// Send message
+	msgsnd(tail, opt, MAX_OPT_SIZE, 0);
+	// Wait for a response
+	msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
+	// Check if the operation had success
+	if (res->error)
+		printf("Operation MOVE couldn't be completed!\n");
+	else
+		printf("Operation MOVE completed successfully!\n");
 }
 
 /*
@@ -43,6 +96,34 @@ void move(int tail) {
 ** Return within the tail the result
 ** of the operation
 */
-void delete(int tail) {
+void delete(int tail, unsigned scope, User * user) {
+	Opt * opt = malloc(MAX_OPT_SIZE);
+	Res * res = malloc(MAX_RES_SIZE);
+	char org[MAX_FOLD_URL];
+	// Ask for a file to be deleted
+	printf("What file do you want to delete?: ");
+	scanf("%s", org);
+	// Set parameters of the struct
+	opt->mtype = REQ;
+	opt->scope = scope;
+	opt->cmd = DEL;
+	opt->org = org;
+	opt->user = *user;
+	// Send message
+	msgsnd(tail, opt, MAX_OPT_SIZE, 0);
+	// Wait for a response
+	msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
+	// Check if the operation had success
+	if (res->error)
+		printf("Operation DELETE couldn't be completed!\n");
+	else
+		printf("Operation DELETE completed successfully!\n");
+}
+/*
+** Recive the scope and the user
+** shows the files either in the
+** shared dir or the private one
+*/
+void show(unsigned scope, User * user) {
 
 }

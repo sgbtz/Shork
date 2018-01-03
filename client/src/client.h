@@ -6,8 +6,6 @@
 #define MAX_UNAME			16
 #define MAX_PASS			16
 #define MAX_FOLD_URL	64
-#define TAM_MEMORY 		100
-#define MAX_SEND_SIZE 200
 #define MAX_USER_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL
 
 /*** TYPE DEFINITIONS ****************/
