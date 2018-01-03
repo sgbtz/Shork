@@ -43,7 +43,7 @@ int used(char *name, File *file){
 	int status = 0;
 	int i = 0;
 	while(file[i].name != NULL){
-		if( file[i].name == name){
+		if(!strcmp(file[i].name,name)){
 			if (file[i].status == 1)
 				status =1;
 		}
@@ -115,6 +115,7 @@ int init(){
 
 	sem_t *mutex=NULL;
 	int error = 0;
+	int shmid;
 
 	mutex = co_sem("mutex", RC);
 	if(mutex == NULL) {
@@ -131,9 +132,10 @@ int init(){
 
 
    	
-   	if((co_mm(clavem,TAM_MEMORY)==-1)) {
+   	if((shmid = co_mm(clavem,TAM_MEMORY)==-1)) {
    		error  = ERROR_MM;
    	}
+   	map_folder("../res/share",shmid,0);
 
 
    	/*Creation of the tail*/
@@ -166,7 +168,7 @@ int end(){
 	
 	key_t clavem = ftok("../res/share/.",'A');
 	int shmid = co_mm(clavem,TAM_MEMORY);
-	printf("%d\n",error);
+	error = dt_mm(shmid);
 
 	key_t clavec = ftok("../res/share/.",'P');
 	int msgid = co_cola(clavec);
