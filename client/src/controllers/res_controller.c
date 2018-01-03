@@ -96,7 +96,7 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 ** Return within the tail the result
 ** of the operation
 */
-void delete(int tail, unsigned scope, User * user) {
+void delt(int tail, unsigned scope, User * user) {
 	Opt * opt = malloc(MAX_OPT_SIZE);
 	Res * res = malloc(MAX_RES_SIZE);
 	char org[MAX_FOLD_URL];
@@ -125,5 +125,20 @@ void delete(int tail, unsigned scope, User * user) {
 ** shared dir or the private one
 */
 void show(unsigned scope, User * user) {
+	pid_t pid = -1; // child/parent process id
 
+	// Create a child process to manage the requests
+	pid = fork();
+
+	switch(pid) {
+		case -1: // there had been an error in fork
+			printf("Error during the execution\n");
+			break;
+		case 0: // child process
+			execl
+			break;
+		default: // parent process
+			menu();
+			break;
+	}
 }
