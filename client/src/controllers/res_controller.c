@@ -1,7 +1,7 @@
 // client/src/controllers/res_controller.c
 
 /*** APPLICATION FILES ***************/
-#include "./client.h"
+#include "../client.h"
 
 /*** INCLUDES ************************/
 #include <stdio.h>
@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/msg.h>
+#include <sys/wait.h>
 
 /*** DEFINES *************************/
 #define REQ 1 // Request will be type 1
@@ -27,6 +28,7 @@ typedef struct {
 	long mtype; // REQ
 	unsigned scope; // public/private
 	unsigned cmd; // move/delete
+	unsigned ud; // upload/download
 	User user;
 	char org[MAX_FOLD_URL];
 	char dest[MAX_FOLD_URL];
@@ -51,6 +53,7 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 	Opt * opt = malloc(MAX_OPT_SIZE);
 	Res * res = malloc(MAX_RES_SIZE);
 	char org[MAX_FOLD_URL];
+	char chw[MAX_FOLD_URL];
 	// Ask for a file to be moved
 	printf("What file do you want to move?: ");
 	scanf("%s", org);
@@ -58,6 +61,7 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 	opt->mtype = REQ;
 	opt->scope = scope;
 	opt->cmd = MOVE;
+	opt->ud = ud;
 	if (!ud) { // if download
 		if (scope == PUBLIC)
 			strcat(opt->org, URL_PUBLIC);
@@ -65,13 +69,13 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 			strcat(opt->org, user->user_folder);
 		strcat(opt->org, "/");
 		strcat(opt->org, org);
-		strcat(opt->dest, getcwd()); // move to working directory
+		strcat(opt->dest, getcwd(chw, MAX_FOLD_URL)); // move to working directory
 	} else { // if upload
 		if (scope == PUBLIC)
 			strcat(opt->dest, URL_PUBLIC);
 		else
 			strcat(opt->dest, user->user_folder);
-		strcat(opt->org, getcwd()); // move from working directory
+		strcat(opt->org, getcwd(chw, MAX_FOLD_URL)); // move from working directory
 		strcat(opt->org, "/");
 		strcat(opt->org, org);
 	}
@@ -107,7 +111,7 @@ void delt(int tail, unsigned scope, User * user) {
 	opt->mtype = REQ;
 	opt->scope = scope;
 	opt->cmd = DEL;
-	opt->org = org;
+	strcpy(opt->org, org);
 	opt->user = *user;
 	// Send message
 	msgsnd(tail, opt, MAX_OPT_SIZE, 0);
@@ -126,19 +130,25 @@ void delt(int tail, unsigned scope, User * user) {
 */
 void show(unsigned scope, User * user) {
 	pid_t pid = -1; // child/parent process id
-
+	int value;
+	char dest[MAX_FOLD_URL];
 	// Create a child process to manage the requests
 	pid = fork();
+	if (scope == PUBLIC)
+		strcat(dest, URL_PUBLIC);
+	else
+		strcat(dest, user->user_folder);
 
 	switch(pid) {
 		case -1: // there had been an error in fork
 			printf("Error during the execution\n");
 			break;
 		case 0: // child process
-			execl
+			if(execlp("ls", "ls", dest, NULL) < 0)
+				printf("Error showing files\n");
 			break;
 		default: // parent process
-			menu();
+			wait(&value);
 			break;
 	}
 }
