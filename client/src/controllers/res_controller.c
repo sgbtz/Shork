@@ -1,5 +1,5 @@
 // client/src/controllers/res_controller.c
-
+ 
 /*** APPLICATION FILES ***************/
 #include "../client.h"
 
@@ -30,8 +30,8 @@ typedef struct {
 	unsigned cmd; // move/delete
 	unsigned ud; // upload/download
 	User user;
-	char org[MAX_FOLD_URL];
-	char dest[MAX_FOLD_URL];
+	char file[MAX_FOLD_URL];
+	char fold[MAX_FOLD_URL];
 } Opt;
 
 typedef struct {
@@ -52,34 +52,19 @@ typedef struct {
 void move(int tail, unsigned scope, User * user, unsigned ud) {
 	Opt * opt = malloc(MAX_OPT_SIZE);
 	Res * res = malloc(MAX_RES_SIZE);
-	char org[MAX_FOLD_URL];
+	char file[MAX_FOLD_URL];
 	char chw[MAX_FOLD_URL];
 	// Ask for a file to be moved
 	printf("What file do you want to move?: ");
-	scanf("%s", org);
+	scanf("%s", file);
 	// Set parameters of the struct
 	opt->mtype = REQ;
 	opt->scope = scope;
 	opt->cmd = MOVE;
 	opt->ud = ud;
-	if (!ud) { // if download
-		if (scope == PUBLIC)
-			strcat(opt->org, URL_PUBLIC);
-		else
-			strcat(opt->org, user->user_folder);
-		strcat(opt->org, "/");
-		strcat(opt->org, org);
-		strcat(opt->dest, getcwd(chw, MAX_FOLD_URL)); // move to working directory
-	} else { // if upload
-		if (scope == PUBLIC)
-			strcat(opt->dest, URL_PUBLIC);
-		else
-			strcat(opt->dest, user->user_folder);
-		strcat(opt->org, getcwd(chw, MAX_FOLD_URL)); // move from working directory
-		strcat(opt->org, "/");
-		strcat(opt->org, org);
-	}
 	opt->user = *user;
+	strcpy(opt->file, file);
+	strcpy(opt->fold, getcwd(chw, MAX_FOLD_URL))
 	// Send message
 	msgsnd(tail, opt, MAX_OPT_SIZE, 0);
 	// Wait for a response
@@ -103,15 +88,15 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 void delt(int tail, unsigned scope, User * user) {
 	Opt * opt = malloc(MAX_OPT_SIZE);
 	Res * res = malloc(MAX_RES_SIZE);
-	char org[MAX_FOLD_URL];
+	char file[MAX_FOLD_URL];
 	// Ask for a file to be deleted
 	printf("What file do you want to delete?: ");
-	scanf("%s", org);
+	scanf("%s", file);
 	// Set parameters of the struct
 	opt->mtype = REQ;
 	opt->scope = scope;
 	opt->cmd = DEL;
-	strcpy(opt->org, org);
+	strcpy(opt->file, file);
 	opt->user = *user;
 	// Send message
 	msgsnd(tail, opt, MAX_OPT_SIZE, 0);

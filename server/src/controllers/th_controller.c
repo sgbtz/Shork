@@ -42,8 +42,8 @@ typedef struct{
 	unsigned cmd;
 	unsigned ud;
 	User user;
-	char org[MAX_FILENAME];
-	char dest[MAX_FILENAME];
+	char file[MAX_FILENAME];
+	char fold[MAX_FILENAME];
 }Opt;
 
 typedef struct {
@@ -54,40 +54,43 @@ typedef struct {
 
 void th_controller(){
 
-key_t key;
-int queue_id;
-Opt qbuffer;/*Queue buffer*/
-char * org,dest;
-File * file;
-key_t clavem;
-sem_t *mutex=NULL;
-int shmid;
+	key_t key;
+	int queue_id;
+	Opt qbuffer;/*Queue buffer*/
+	char * org,dest;
+	File * file;
+	key_t clavem;
+	sem_t *mutex=NULL;
+	int shmid;
+	char org[MAX_FOLD_URL];
+	char dest[MAX_FOLD_URL];
+	int free = 0;
 
 
-key=ftok("../res/share/.",'Q'); /*Creating new queue*/
+	key=ftok("../res/share/.",'Q'); /*Creating new queue*/
 
-if((queue_id=msgget(key,IPC_CREAT|0666))==-1) /*get the queue*/
-	printf("Error al iniciar la cola\n");
-else{
-	if(msgrcv(queue_id,&qbuffer,MAX_SEND_SIZE,REQ,0)!=-1){
-		/*depending on the type of the msg*/
-		if(qbuffer.scope==ISPRIVATE){
-			switch(qbuffer.cmd)
-				/*MOVE FILE*/
-				case MOVE:
-					org=qbuffer.org;
-					dest=strcat(qbuffer.user.user_folder,qbuffer.dest);
-					move(org,dest);
-			 	break;
+	if((queue_id=msgget(key,IPC_CREAT|0666))==-1) /*get the queue*/
+		printf("Error al iniciar la cola\n");
+	else{
+		if(msgrcv(queue_id,&qbuffer,MAX_SEND_SIZE,REQ,0)!=-1){
+			/*depending on the type of the msg*/
+			if(qbuffer.scope==ISPRIVATE){
+				switch(qbuffer.cmd) {
+					/*MOVE FILE*/
+					case MOVE:
+						org=qbuffer.org;
+						dest=strcat(qbuffer.user.user_folder,qbuffer.dest);
+						move(org,dest);
+				 	break;
 
-			 	/*DELETE FILE*/
-			 	case DELETE:
-					dlt(qbuffer.user.user_folder,org);
-			 	break;
-		}
-			
-		if(qbuffer.scope==ISPUBLIC)
-			switch(qbuffer.cmd)
+				 	/*DELETE FILE*/
+				 	case DELETE:
+						dlt(qbuffer.user.user_folder,org);
+				 	break;
+				}
+			}
+				
+			if(qbuffer.scope==ISPUBLIC) {
 				clavem=ftok("../res/share/.",'A');
 				co_mm(clavem,TAM_MEMORY);
 				mutex = co_sem("mutex", RC);
@@ -95,27 +98,40 @@ else{
 				if(file =shmat(shmid,NULL,0) == (File *)-1)
 					printf("Error al mapear la memoria compartida\n");
 				else{
-					sem_wait(mutex);
-					used(/*To-Do*/)
-				}
-
-
-				/*MOVE FILE*/
-				case MOVE:
-					if(qbuffer.ud == UPLOAD)
-						move(qbuffer.org,qbuffer.dest);
-					else{
-						
+					if (!ud) { // if download
+						strcat(org, URL_PUBLIC);
+						strcat(org, "/");
+						strcat(org, qbuffer.file);
+						strcat(dest, qbuffer.fold); // move to working directory
+					} else { // if upload
+						strcat(dest, URL_PUBLIC);
+						strcat(org, qbuffer.fold); // move from working directory
+						strcat(org, "/");
+						strcat(org, qbuffer.file);
 					}
-				break;
-				/*DELETE FILE*/
-				case DELETE:
-				break;
-		
+					sem_wait(mutex);
+					free = used(qbuffer.file, file);
+					sem_post(mutex);
+					if(free) {
+						switch(qbuffer.cmd) {
+							/*MOVE FILE*/
+							case MOVE:
+								move(org,dest);
+								break;
+							/*DELETE FILE*/
+							case DELETE:
+								del(qbuffer.file);
+								break;
+						}
+					sem_wait(mutex);
+					nused(qbuffer.file, file);
+					sem_post(mutex);
+					}
+				}
+			}
 		}
 	}
 }
-
 
 
 

@@ -49,13 +49,21 @@ int used(char *name, File *file){
 	int i = 0;
 	while(file[i].name != NULL){
 		if(!strcmp(file[i].name,name)){
-			if (file[i].status == 1)
-				status =1;
+			if ((status = file[i].status))
+				file[i].status = 0;
 		}
 	}
 	return status;
 }
-
+/* Set as free the file status */
+void nused(char * name, File * file) {
+	int i = 0;
+	while(file[i].name != NULL){
+		if(!strcmp(file[i].name,name)){
+			file[i].status = 1;
+		}
+	}
+}
 
 /*This function create or open a semaphore.Recive the name of the semaphore
   and return the id */ 

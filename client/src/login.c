@@ -16,7 +16,7 @@
 #define ERROR 0
 #define OK 1
 #define MAX_REQ_SIZE MAX_UNAME + MAX_PASS + sizeof(long) // Max size of the request msg
-#define MAX_RES_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
+#define MAX_LOGRES_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
 
 /*** FUNCTIONS ***********************/
 /*
@@ -29,7 +29,7 @@ void login() {
 	key_t key; // key for the tail
 	User * user = malloc(MAX_USER_SIZE);
 	LogReq * req = malloc(MAX_REQ_SIZE); // request goes here
-	LogRes * res = malloc(MAX_RES_SIZE); // response goes here
+	LogRes * res = malloc(MAX_LOGRES_SIZE); // response goes here
 	unsigned success = ERROR;
 
 	key = ftok("../../server/res/share/.",'P');
@@ -46,9 +46,9 @@ void login() {
 		msgsnd(tail, req, MAX_REQ_SIZE, 0);
 		// Wait for the response to the correct user
 		do {
-			msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
+			msgrcv(tail, res, MAX_LOGRES_SIZE, RES, 0);
 			if(strcmp(req->user_name, res->user.user_name))
-				msgsnd(tail, res, MAX_RES_SIZE, 0);
+				msgsnd(tail, res, MAX_LOGRES_SIZE, 0);
 		} while(strcmp(req->user_name, res->user.user_name));
 		// Checks the result
 		if (res->error) { // if ok
