@@ -2,5 +2,9 @@
 	"sebas":	{
 		"folderURL":	"../res/users/sebas",
 		"password":	"guisasola"
+	},
+	"fabio":	{
+		"folderURL":	"../res/users/fabio",
+		"password":	"lopez"
 	}
 }
