@@ -29,11 +29,16 @@ File *map_folder(char* route, int shmid, int i){
 	File *file = NULL;
 	file = shmat(shmid,NULL,0);
 	DIR *actual = opendir(route);
-	struct dirent *aux;
-	while((aux = readdir(actual)) != NULL){
-		file[i].name = aux->d_name;
-		file[i].status = 1;
-		i++;
+	if(actual != NULL){
+		struct dirent *aux;
+		while((aux = readdir(actual)) != NULL){
+			strncpy(file[i].name,aux->d_name,MAX_NAME_FOLD-1);
+			file[i].status = 1;
+			i++;
+		}
+	}
+	else{
+		printf("The route doesn't exist.\n");
 	}
 	return file;	
 }
@@ -126,6 +131,7 @@ int init(){
 	}
 
 
+
 	/*Creation of the share memory*/
 
 	key_t clavem=ftok("../res/share/.",'A'); 
@@ -135,6 +141,7 @@ int init(){
    	if((shmid = co_mm(clavem,TAM_MEMORY)==-1)) {
    		error  = ERROR_MM;
    	}
+
    	map_folder("../res/share",shmid,0);
 
 

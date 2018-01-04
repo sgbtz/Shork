@@ -17,6 +17,7 @@ int main(void) {
 
 	// Create the needed resources
 	init();
+	
 	// Create a child process to manage the requests
 	pid = fork();
 
