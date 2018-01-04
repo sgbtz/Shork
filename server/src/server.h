@@ -9,10 +9,9 @@
 #define MAX_UNAME			16
 #define MAX_PASS			16
 #define MAX_FOLD_URL	64
-#define TAM_MEMORY 		100
 #define MAX_USER_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL
 #define MAX_NAME_FOLD 100
-
+#define TAM_MEMORY 		10*(sizeof(unsigned) + MAX_NAME_FOLD)
 
 /*** TYPE DEFINITIONS ****************/
 typedef struct {

@@ -8,7 +8,7 @@
 
 #define NO_ERROR 0
 #define TAM_RT 100
-#define ERROR -1
+#define FAIL -1
 #define ERROR_OPEN0 1
 #define ERROR_OPEND 4
 #define ERROR_FSTAT 2
@@ -28,7 +28,7 @@ strcpy(aux,rt);
 strcat(aux,"/");
 strcat(aux,name);
 if (unlink((const char *)aux) == -1){
-	error = ERROR;
+	error = FAIL;
 } 
 return error;
 

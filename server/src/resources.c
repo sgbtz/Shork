@@ -146,7 +146,7 @@ int init(){
 
 
    	
-   	if((shmid = co_mm(clavem,TAM_MEMORY)==-1)) {
+   	if((shmid = co_mm(clavem,TAM_MEMORY))==-1) {
    		error  = ERROR_MM;
    	}
 

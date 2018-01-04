@@ -14,7 +14,7 @@
 #define SHARE 1
 #define DOWNL 0
 #define UPL 1
-
+#define END -1
 
 int showmenu(){
 
@@ -38,6 +38,7 @@ void menu(int msgid, User *user){
 	int cont = 1;
 	int action;
 	int sscop = 1;
+	Opt * end = malloc(MAX_OPT_SIZE);
 
 	while (cont){
 		printf("Welcome. What folder do you want to open? Enter the number:\n");
@@ -74,7 +75,8 @@ void menu(int msgid, User *user){
 			}
 		}
 	
-		
+	end->mtype = END;
+	msgsnd(msgid, end, MAX_OPT_SIZE, 0);
 	printf("Thank you for use our service. See you soon.\n");
 	msgctl(msgid,IPC_RMID, NULL);
 }

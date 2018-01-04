@@ -23,21 +23,6 @@
 #define PUBLIC 1
 #define PRIVATE 2
 #define URL_PUBLIC "../res/share"
-/*** TYPE DEFINITIONS ****************/
-typedef struct {
-	long mtype; // REQ
-	unsigned scope; // public/private
-	unsigned cmd; // move/delete
-	unsigned ud; // upload/download
-	User user;
-	char file[MAX_FOLD_URL];
-	char fold[MAX_FOLD_URL];
-} Opt;
-
-typedef struct {
-	long mtype; // RES
-	unsigned error; // ERROR/OK
-} Res;
 
 /*** FUNCTIONS ***********************/
 /*
@@ -64,7 +49,7 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 	opt->ud = ud;
 	opt->user = *user;
 	strcpy(opt->file, file);
-	strcpy(opt->fold, getcwd(chw, MAX_FOLD_URL))
+	strcpy(opt->fold, getcwd(chw, MAX_FOLD_URL));
 	// Send message
 	msgsnd(tail, opt, MAX_OPT_SIZE, 0);
 	// Wait for a response

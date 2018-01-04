@@ -33,6 +33,21 @@ typedef struct {
 	int ptail; // private tail ids
 } LogRes;
 
+typedef struct {
+	long mtype; // REQ
+	unsigned scope; // public/private
+	unsigned cmd; // move/delete
+	unsigned ud; // upload/download
+	User user;
+	char file[MAX_FOLD_URL];
+	char fold[MAX_FOLD_URL];
+} Opt;
+
+typedef struct {
+	long mtype; // RES
+	unsigned error; // ERROR/OK
+} Res;
+
 /*** FUNCTIONS DEFINITIONS ****************/
 
 // login.c

@@ -3,7 +3,7 @@
 /*** APPLICATION FILES ***************/
 #include "../server.h"
 #include "./user_controller.c"
-//#include "./th_controller.c"
+#include "./th_controller.c"
 
 /*** INCLUDES ************************/
 #include <stdio.h>
@@ -98,7 +98,7 @@ void * connection(void * con) {
 		res->error = OK;
 		res->mtype = RES;
 		msgsnd(conn->tail, res, MAX_RES_SIZE, 0); // return success
-		// TO-DO: Call to th_controller passing the private tail id as parameter
+		th_controller();
 	}
 
 	pthread_exit(NULL);
