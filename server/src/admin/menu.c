@@ -14,8 +14,7 @@
 void menu(){
 	char  order; //order represented by numeric character.
 	pid_t id;
-	User * user=NULL;
-	user = malloc(sizeof(char)*(MAX_PASS*MAX_UNAME*MAX_FOLD_URL + 3));
+	User user;
 	
 	
 	/*Waiting orders*/
@@ -32,9 +31,9 @@ void menu(){
 			case '1':
 				printf("Introduce username and password\n");
 				printf("Username: ");
-				scanf("%s",user->user_name);
+				scanf("%s",user.user_name);
 				printf("password: ");
-				scanf("%s",user->password);
+				scanf("%s",user.password);
 				/*Create user function*/
 				if(create_user(user)) //it returns OK if success. 
 					printf("Success!\n");
@@ -45,7 +44,7 @@ void menu(){
 			case '2':
 				printf("Introduce username in order to delete it:\n");
 				printf("Username: ");
-				scanf("%s",user->user_name);
+				scanf("%s",user.user_name);
 				/*delete user function*/
 				if(delete_user(user))
 					printf("Success!\n");
@@ -56,9 +55,9 @@ void menu(){
 			case '3':
 				printf("Introduce username and new password\n");
 				printf("Username: ");
-				scanf("%s",user->user_name);
+				scanf("%s",user.user_name);
 				printf("password: ");
-				scanf("%s",user->password);
+				scanf("%s",user.password);
 				/*update user function*/
 				if(update_user(user))
 					printf("Success!\n");

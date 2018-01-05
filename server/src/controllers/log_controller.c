@@ -21,7 +21,6 @@
 #define MAX_THREADS 10
 #define MAX_REQ_SIZE MAX_UNAME + MAX_PASS + sizeof(long) // Max size of the request msg
 #define MAX_RES_SIZE MAX_USER_SIZE + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
-#define FOLDER_URL		"../res/users/"
 
 /*** TYPE DEFINITIONS ****************/
 typedef struct {
@@ -80,7 +79,7 @@ void * connection(void * con) {
 	key_t pkey = 0;
 	char folder[MAX_FOLD_URL];
 	// Checks if the parameters are OK
-	if (!auth_user(&(conn->user))) { // if not
+	if (!auth_user((conn->user))) { // if not
 		res->user = conn->user;
 		res->error = ERROR;
 		res->mtype = RES;

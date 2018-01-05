@@ -16,7 +16,8 @@ server.o:
 delete:
 	rm client/bin/*
 	rm server/bin/*
+	rm *.o
 
-debug: client.o server.o
+debug:
 	$(CC) $(OPT) -g -o client/bin/client client/src/client.c
 	$(CC) $(OPT) -g -o server/bin/server server/src/server.c -lpthread

@@ -26,10 +26,10 @@ int main(void) {
 			printf("Error during the execution\n");
 			break;
 		case 0: // child process
-			menu();
+			login();
 			break;
 		default: // parent process
-			login();
+			menu();
 			break;
 	}
 
