@@ -19,8 +19,8 @@
 #define ERROR 0
 #define OK 1
 #define MAX_THREADS 10
-#define MAX_REQ_SIZE MAX_UNAME + MAX_PASS + sizeof(long) // Max size of the request msg
-#define MAX_RES_SIZE MAX_USER_SIZE + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
+#define MAX_LOGREQ_SIZE MAX_UNAME + MAX_PASS + sizeof(long) // Max size of the request msg
+#define MAX_LOGRES_SIZE MAX_USER_SIZE + sizeof(long) + sizeof(unsigned) // MAx size of the response msg
 
 /*** TYPE DEFINITIONS ****************/
 typedef struct {
@@ -36,7 +36,7 @@ typedef struct {
 void login() {
 	int tail = 0, i = 0; // users tail id and counter
 	key_t key; // key for the tail
-	LogReq * req = malloc(MAX_REQ_SIZE); // message goes here
+	LogReq * req = malloc(MAX_LOGREQ_SIZE); // message goes here
 	User * user = malloc(MAX_USER_SIZE);
 	pthread_attr_t attr;
 	pthread_t conn[MAX_THREADS];
@@ -50,7 +50,7 @@ void login() {
 
 	while(1){
 		// Look for a login request in the tail
-		if((MAX_REQ_SIZE == msgrcv(tail, req, MAX_REQ_SIZE, REQ, 0))) {
+		if((MAX_LOGREQ_SIZE == msgrcv(tail, req, MAX_LOGREQ_SIZE, REQ, 0))) {
 			strcpy(user->user_name, req->user_name);
 			strcpy(user->password, req->password);
 			// Create a thread to manage the client request
@@ -73,17 +73,17 @@ void login() {
 **	- ERROR if auth failed
 */
 void * connection(void * con) {
-	LogRes * res = malloc(MAX_RES_SIZE);
+	LogRes * res = malloc(MAX_LOGRES_SIZE);
 	Conn * conn = (Conn *) con;
 	int ptail = 0;
 	key_t pkey = 0;
 	char folder[MAX_FOLD_URL];
 	// Checks if the parameters are OK
-	if (!auth_user((conn->user))) { // if not
+	if (!auth_user((&conn->user))) { // if not
 		res->user = conn->user;
 		res->error = ERROR;
 		res->mtype = RES;
-		msgsnd(conn->tail, res, MAX_RES_SIZE, 0); // return an error
+		msgsnd(conn->tail, res, MAX_LOGRES_SIZE, 0); // return an error
 	} else { // if yes
 		// Concatenate folder url to create private tail
 		strcat(folder,FOLDER_URL);
@@ -96,8 +96,8 @@ void * connection(void * con) {
 		res->user = conn->user;
 		res->error = OK;
 		res->mtype = RES;
-		msgsnd(conn->tail, res, MAX_RES_SIZE, 0); // return success
-		th_controller();
+		msgsnd(conn->tail, res, MAX_LOGRES_SIZE, 0); // return success
+		th_controller(ptail);
 	}
 
 	pthread_exit(NULL);

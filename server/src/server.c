@@ -26,7 +26,7 @@ int main(void) {
 			printf("Error during the execution\n");
 			break;
 		case 0: // child process
-			menu();
+			//menu();
 			break;
 		default: // parent process
 			login();

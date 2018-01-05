@@ -59,7 +59,7 @@ void menu();
 **	1 if the login is valid
 **	0 otherwise
 */
-unsigned auth_user(User user);
+unsigned auth_user(User * user);
 /*
 ** Recives a User structure to be created in the
 ** user database (user.json)

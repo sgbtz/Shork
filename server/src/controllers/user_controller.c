@@ -24,7 +24,7 @@
 ** a username. Checks whether the user is valid and,
 ** if he is, gives him the user folder
 */
-unsigned auth_user(User user){
+unsigned auth_user(User * user){
 	cJSON * users  = NULL;
 	cJSON * juser  = NULL;
 	cJSON * pass   = NULL;
@@ -34,17 +34,17 @@ unsigned auth_user(User user){
 	// Get structure of users
 	if (!(users = get_json(USERS_URL)))
 		success = ERROR;
-	else if (!(juser  = cJSON_GetObjectItemCaseSensitive(users, user.user_name))) {
+	else if (!(juser  = cJSON_GetObjectItemCaseSensitive(users, user->user_name))) {
 		cJSON_Delete(users); // close json object
 		success = ERROR;
 	} // Check password
 	else {
 		pass = cJSON_GetObjectItemCaseSensitive(juser, "password");
-		if (strcmp(user.password, pass->valuestring))
+		if (strcmp(user->password, pass->valuestring))
 			success = ERROR; // wrong password
 		else { // successful login
 			folder = cJSON_GetObjectItemCaseSensitive(juser, "folderURL");
-			strncpy(user.user_folder, folder->valuestring, MAX_PASS); // gives user personal folder
+			strcpy(user->user_folder, folder->valuestring); // gives user personal folder
 		}
 
 		cJSON_Delete(users); // close json object
