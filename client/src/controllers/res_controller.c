@@ -83,6 +83,7 @@ void delt(int tail, unsigned scope, User * user) {
 	opt->cmd = DEL;
 	strcpy(opt->file, file);
 	opt->user = *user;
+	opt->ud = 0;
 	// Send message
 	msgsnd(tail, opt, MAX_OPT_SIZE, 0);
 	// Wait for a response

@@ -29,18 +29,31 @@ typedef struct {
 } Conn;
 
 /*** FUNCTIONS ***********************/
+/* Handle signal */
+void end_handle() {
+	pid_t pid;
+	end();
+	pid = getpid();
+	kill(pid,SIGKILL); //send signal to this process.
+}
 /*
 ** Wait for login request recived within the share tail
 ** auth the user and return a response in a thread
 */
 void login() {
 	int tail = 0, i = 0; // users tail id and counter
+	struct sigaction act; // struct for signal
 	key_t key; // key for the tail
 	LogReq * req = malloc(MAX_LOGREQ_SIZE); // message goes here
 	User * user = malloc(MAX_USER_SIZE);
 	pthread_attr_t attr;
 	pthread_t conn[MAX_THREADS];
 	Conn * info = malloc(MAX_USER_SIZE + sizeof(int));
+	// Signal handle 
+	act.sa_handler = &end_handle;
+	act.sa_flags= 0;
+	sigemptyset(&act.sa_mask);
+	sigaction(SIGINT, &act, NULL);
 
 	key = ftok("server/res/share/.",'P');
 	tail = co_cola(key);
@@ -59,9 +72,8 @@ void login() {
 			pthread_create(&conn[i], &attr, connection, info);
 			i++;
 		}
+		pthread_attr_destroy(&attr);
 	}
-
-	pthread_attr_destroy(&attr);
 }
 
 /*

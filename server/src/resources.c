@@ -22,7 +22,6 @@
 
 
 
-
 /*Map the share memory with all the files in the route since the variable i. Return the share memory mapped*/
 
 File *map_folder(char* route, int shmid, int i){
@@ -47,21 +46,30 @@ File *map_folder(char* route, int shmid, int i){
 int used(char *name, File *file){
 	int status = 0;
 	int i = 0;
-	while(file[i].name != NULL){
-		if(!strcmp(file[i].name,name)){
+	int aux = 1;
+
+	while(i < MAX_FILES && aux){
+		if(!strncmp(file[i].name,name,strlen(name))){
 			if ((status = file[i].status))
 				file[i].status = 0;
+
+			aux = 0;
 		}
+		i++;
 	}
 	return status;
 }
 /* Set as free the file status */
 void nused(char * name, File * file) {
 	int i = 0;
-	while(file[i].name != NULL){
-		if(!strcmp(file[i].name,name)){
+	int aux = 1;
+
+	while(i < MAX_FILES && aux){
+		if(!strncmp(file[i].name,name,strlen(name))){
 			file[i].status = 1;
+			aux = 0;
 		}
+		i++;
 	}
 }
 

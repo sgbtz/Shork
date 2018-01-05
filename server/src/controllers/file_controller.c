@@ -25,7 +25,6 @@ int tam = strlen(rt) + strlen(name);
 char aux[tam];
 int error = NO_ERROR;
 strcpy(aux,rt);
-strcat(aux,"/");
 strcat(aux,name);
 if (unlink((const char *)aux) == -1){
 	error = FAIL;

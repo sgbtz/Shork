@@ -98,8 +98,11 @@ unsigned delete_user(User user){
 	cJSON * users = NULL;
 	cJSON * juser = NULL;
 	cJSON * fold  = NULL;
+	struct dirent *aux;
+	DIR *actual = NULL;
 	char folder[MAX_FOLD_URL];
 	unsigned success = OK;
+	char file[MAX_FOLD_URL];
 	int len = strlen(FOLDER_URL)+strlen(user.user_name);
 
 	// get structure of users
@@ -118,6 +121,15 @@ unsigned delete_user(User user){
 			success = ERROR;
 		// Delete user folder
 		folder[len+1] = '\0';
+		actual = opendir(folder);
+		if(actual != NULL){
+			while((aux = readdir(actual)) != NULL){
+				strcpy(file, folder);
+				strcat(file, "/");
+				strcat(file, aux->d_name);
+				unlink((const char *) file);
+			}
+		}
 		if (rmdir(folder))
 			success = ERROR;
 

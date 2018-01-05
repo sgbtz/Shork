@@ -1,18 +1,2 @@
 {
-	"sebas":	{
-		"folderURL":	"server/res/users/sebas",
-		"password":	"guisasola"
-	},
-	"javi":	{
-		"folderURL":	"server/res/users/javi",
-		"password":	"jimenez"
-	},
-	"fabio":	{
-		"folderURL":	"server/res/users/fabio",
-		"password":	"e"
-	},
-	"torroba":	{
-		"folderURL":	"server/res/users/torroba",
-		"password":	"calvo"
-	}
 }

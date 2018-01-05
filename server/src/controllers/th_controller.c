@@ -15,7 +15,6 @@
 #define MAX_OPT_SIZE MAX_USER_SIZE + 2*MAX_FOLD_URL + sizeof(long) + 2*sizeof(unsigned)
 #define MAX_RES_SIZE sizeof(long) + sizeof(unsigned)
 #define ACTION 2
-#define CD 3     /*change directory*/
 #define ISPRIVATE 2
 #define ISPUBLIC 1
 #define MOVE 1
@@ -24,8 +23,8 @@
 #define UPLOAD 1
 #define REQ 1
 #define RES 2
-#define END -1
-#define DEST_PUBLIC_PATH "server/res/users/share/"
+#define END 3
+#define DEST_PUBLIC_PATH "server/res/share/"
 
 /***TYPEDEFS******/
 typedef struct{ 
@@ -58,66 +57,77 @@ void th_controller(int ptail){
 	int end = 0;
 	res->error = 1;
 
-	while(!end) {
-		msgrcv(ptail, opt, MAX_OPT_SIZE,REQ,0);
-		if(opt->mtype != END) {
-			/*depending on the type of the msg*/
-			if(opt->scope==ISPRIVATE){
-				switch(opt->cmd) {
-					/*MOVE FILE*/
-					case MOVE:
-						if (!opt->ud) { // if download
+	clavem=ftok("server/res/share/.",'A');
+	shmid = co_mm(clavem,TAM_MEMORY);
+	mutex = sem_open("mutex",0);
+	/*map the memory*/
+	if((file =shmat(shmid,NULL,0)) == (File *)-1)
+		printf("Error al mapear la memoria compartida\n");
+	else{
+		while(!end) {
+			msgrcv(ptail, opt, MAX_OPT_SIZE,REQ,0);
+			if(opt->cmd != END) {
+				/*depending on the type of the msg*/
+				if(opt->scope==ISPRIVATE){
+					switch(opt->cmd) {
+						/*MOVE FILE*/
+						case MOVE:
+							if (!opt->ud) { // if download
+								strcpy(org, opt->user.user_folder);
+								strcat(org, "/");
+								strcat(org, opt->file);
+								strcpy(dest, opt->fold); // move to downloads folder
+								strcat(dest, "/");
+								strcat(dest, "downloads");
+								strcat(dest, "/");
+								strcat(dest, opt->file);
+							} else { // if upload
+								strcpy(dest, opt->user.user_folder);
+								strcat(dest, "/");
+								strcat(dest, opt->file);
+								strcpy(org, opt->fold); // move from uploads folder
+								strcat(org, "/");
+								strcat(org, "uploads");
+								strcat(org, "/");
+								strcat(org, opt->file);
+							}
+							res->error = move(org,dest);
+					 	break;
+
+					 	/*DELETE FILE*/
+					 	case DELETE:
 							strcpy(org, opt->user.user_folder);
 							strcat(org, "/");
-							strcat(org, opt->file);
-							strcpy(dest, opt->fold); // move to downloads folder
-							strcat(dest, "/");
-							strcat(dest, "downloads");
-						} else { // if upload
-							strcpy(dest, opt->user.user_folder);
-							strcpy(org, opt->fold); // move from uploads folder
-							strcat(org, "/");
-							strcat(org, "uploads");
-							strcat(org, "/");
-							strcat(org, opt->file);
-						}
-						res->error = move(org,dest);
-				 	break;
+							res->error = dlt(org, opt->file);
+					 	break;
+					}
 
-				 	/*DELETE FILE*/
-				 	case DELETE:
-						res->error = dlt(opt->user.user_folder, opt->file);
-				 	break;
 				}
+					
+				else if(opt->scope==ISPUBLIC) {
 
-			}
-				
-			else if(opt->scope==ISPUBLIC) {
-				clavem=ftok("server/res/share/.",'A');
-				shmid = co_mm(clavem,TAM_MEMORY);
-				mutex = co_sem("mutex", RC);
-				/*map the memory*/
-				if((file =shmat(shmid,NULL,0)) == (File *)-1)
-					printf("Error al mapear la memoria compartida\n");
-				else{
 					if (!opt->ud) { // if download
+						sem_wait(mutex);
+						free = used(opt->file, file);
+						sem_post(mutex);
 						strcpy(org, DEST_PUBLIC_PATH);
 						strcat(org, opt->file);
 						strcpy(dest, opt->fold); // move to downloads folder
 						strcat(dest, "/");
 						strcat(dest, "downloads");
+						strcat(dest, "/");
+						strcat(dest, opt->file);
 					} else { // if upload
 						strcpy(dest, DEST_PUBLIC_PATH);
+						strcat(dest, opt->file);
 						strcpy(org, opt->fold); // move from uploads folder
 						strcat(org, "/");
 						strcat(org, "uploads");
 						strcat(org, "/");
 						strcat(org, opt->file);
 					}
-					sem_wait(mutex);
-					free = used(opt->file, file);
-					sem_post(mutex);
-					if(free) {
+
+					if((free && !opt->ud) || opt->ud) {
 						switch(opt->cmd) {
 							/*MOVE FILE*/
 							case MOVE:
@@ -133,12 +143,12 @@ void th_controller(int ptail){
 					sem_post(mutex);
 					}
 				}
+				res->mtype = RES;
+				msgsnd(ptail, res, MAX_RES_SIZE, 0);
 			}
-			res->mtype = RES;
-			msgsnd(ptail, res, MAX_RES_SIZE, 0);
+			else
+				end = 1;
 		}
-		else
-			end = 1;
 	}
 }
 

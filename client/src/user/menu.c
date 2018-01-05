@@ -14,7 +14,7 @@
 #define SHARE 1
 #define DOWNL 0
 #define UPL 1
-#define END -1
+#define END 3
 
 int showmenu(){
 
@@ -77,7 +77,8 @@ void menu(int msgid, User *user){
 			}
 		}
 	
-	end->mtype = END;
+	end->mtype = REQ;
+	end->cmd = END;
 	msgsnd(msgid, end, MAX_OPT_SIZE, 0);
 	printf("Thank you for use our service. See you soon.\n");
 	msgctl(msgid,IPC_RMID, NULL);

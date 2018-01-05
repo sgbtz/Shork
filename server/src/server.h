@@ -11,7 +11,8 @@
 #define MAX_FOLD_URL	64
 #define MAX_USER_SIZE MAX_UNAME + MAX_PASS + MAX_FOLD_URL
 #define MAX_NAME_FOLD 100
-#define TAM_MEMORY 		10*(sizeof(unsigned) + MAX_NAME_FOLD)
+#define MAX_FILES			10
+#define TAM_MEMORY 		MAX_FILES*(sizeof(unsigned) + MAX_NAME_FOLD)
 
 /*** TYPE DEFINITIONS ****************/
 typedef struct {
