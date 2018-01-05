@@ -1,7 +1,7 @@
 #MAKEFILE OF SHORK
 
 CC = gcc
-OPT = -W -Wall 
+OPT = -W -Wall
 
 shork: client.o server.o
 	$(CC) $(OPT) -o client/bin/client client.o
@@ -15,3 +15,7 @@ server.o:
 
 delete:
 	rm *.o
+
+debug: client.o server.o
+	$(CC) $(OPT) -g -o client/bin/client client.o
+	$(CC) $(OPT) -g -o server/bin/server server.o -lpthread
