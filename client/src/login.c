@@ -32,7 +32,7 @@ void login() {
 	LogRes * res = malloc(MAX_LOGRES_SIZE); // response goes here
 	unsigned success = ERROR;
 
-	key = ftok("../../server/res/share/.",'P');
+	key = ftok("server/res/share/.",'P');
 	tail = msgget(key, IPC_CREAT);
 
  	// Ask for username and pass while they are incorrect

@@ -22,7 +22,7 @@
 #define DEL  2
 #define PUBLIC 1
 #define PRIVATE 2
-#define URL_PUBLIC "../res/share"
+#define URL_PUBLIC "server/res/share"
 
 /*** FUNCTIONS ***********************/
 /*

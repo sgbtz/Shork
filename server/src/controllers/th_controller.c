@@ -26,7 +26,7 @@
 #define REQ 1
 #define RES 2
 #define END -1
-#define DEST_PUBLIC_PATH "../res/users/share/"
+#define DEST_PUBLIC_PATH "server/res/users/share/"
 
 /***TYPEDEFS******/
 typedef struct{ 
@@ -61,7 +61,7 @@ void th_controller(){
 	int end = 0;
 
 
-	key=ftok("../res/share/.",'Q'); /*Creating new queue*/
+	key=ftok("server/res/share/.",'Q'); /*Creating new queue*/
 
 	if((queue_id=msgget(key,IPC_CREAT|0666))==-1) /*get the queue*/
 		printf("Error al iniciar la cola\n");
@@ -97,7 +97,7 @@ void th_controller(){
 				}
 					
 				else if(qbuffer.scope==ISPUBLIC) {
-					clavem=ftok("../res/share/.",'A');
+					clavem=ftok("server/res/share/.",'A');
 					shmid = co_mm(clavem,TAM_MEMORY);
 					mutex = co_sem("mutex", RC);
 					/*map the memory*/

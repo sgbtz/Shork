@@ -42,7 +42,7 @@ void login() {
 	pthread_t conn[MAX_THREADS];
 	Conn * info = malloc(MAX_USER_SIZE + sizeof(int));
 
-	key = ftok("../res/share/.",'P');
+	key = ftok("server/res/share/.",'P');
 	tail = co_cola(key);
 	// Config attributes for threads
 	pthread_attr_init(&attr);

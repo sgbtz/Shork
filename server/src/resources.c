@@ -142,7 +142,7 @@ int init(){
 
 	/*Creation of the share memory*/
 
-	key_t clavem=ftok("../res/share/.",'A'); 
+	key_t clavem=ftok("server/res/share/.",'A'); 
 
 
    	
@@ -150,12 +150,12 @@ int init(){
    		error  = ERROR_MM;
    	}
 
-   	map_folder("../res/share",shmid,0);
+   	map_folder("server/res/share",shmid,0);
 
 
    	/*Creation of the tail*/
 
-   	key_t clavec = ftok("../res/share/.", 'P');
+   	key_t clavec = ftok("server/res/share/.", 'P');
 
    	if(co_cola(clavec) == -1){
    		error = ERROR_COLA;
@@ -181,11 +181,11 @@ int end(){
 	}
 
 	
-	key_t clavem = ftok("../res/share/.",'A');
+	key_t clavem = ftok("server/res/share/.",'A');
 	int shmid = co_mm(clavem,TAM_MEMORY);
 	error = dt_mm(shmid);
 
-	key_t clavec = ftok("../res/share/.",'P');
+	key_t clavec = ftok("server/res/share/.",'P');
 	int msgid = co_cola(clavec);
 	error = dt_c(msgid);
 
