@@ -14,8 +14,9 @@ server.o:
 	$(CC) $(OPT) -c server/src/server.c 
 
 delete:
-	rm *.o
+	rm client/bin/*
+	rm server/bin/*
 
 debug: client.o server.o
-	$(CC) $(OPT) -g -o client/bin/client client.o
-	$(CC) $(OPT) -g -o server/bin/server server.o -lpthread
+	$(CC) $(OPT) -g -o client/bin/client client/src/client.c
+	$(CC) $(OPT) -g -o server/bin/server server/src/server.c -lpthread
