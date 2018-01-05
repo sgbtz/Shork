@@ -55,8 +55,8 @@ void th_controller(){
 	key_t clavem;
 	sem_t *mutex=NULL;
 	int shmid;
-	char org[MAX_FOLD_URL];
-	char dest[MAX_FOLD_URL];
+	char * org = malloc(MAX_FOLD_URL);
+	char * dest = malloc(MAX_FOLD_URL);
 	int free = 0;
 	int end = 0;
 

@@ -105,9 +105,9 @@ void show(unsigned scope, User * user) {
 	// Create a child process to manage the requests
 	pid = fork();
 	if (scope == PUBLIC)
-		strcat(dest, URL_PUBLIC);
+		strcpy(dest, URL_PUBLIC);
 	else
-		strcat(dest, user->user_folder);
+		strcpy(dest, user->user_folder);
 
 	switch(pid) {
 		case -1: // there had been an error in fork

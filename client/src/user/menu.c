@@ -25,8 +25,9 @@ int showmenu(){
 		printf("3. UPLOAD A FILE\n");
 		printf("4. DELETE A FILE\n");
 		printf("5. CHANGE THE SCOPE\n");
-		printf("6.EXIT\n");
-		scanf("Introduce a number %d", &action);
+		printf("6. EXIT\n");
+		printf("Introduce a number: ");
+		scanf("%d", &action);
 
 		return action;
 }
@@ -42,9 +43,10 @@ void menu(int msgid, User *user){
 
 	while (cont){
 		printf("Welcome. What folder do you want to open? Enter the number:\n");
-		printf("1.SHARE\n");
-		printf("2.PRIVATE\n");
-		scanf("Introduce a number %u",&scope);
+		printf("1. SHARE\n");
+		printf("2. PRIVATE\n");
+		printf("Introduce a number: ");
+		scanf("%u", &scope);
 		sscop = 1;
 		
 		while(sscop){
