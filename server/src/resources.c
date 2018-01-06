@@ -24,16 +24,16 @@
 
 /*Map the share memory with all the files in the route since the variable i. Return the share memory mapped*/
 
-File *map_folder(char* route, int shmid, int i){
+File *map_folder(char* route, int shmid, int * i){
 	File *file = NULL;
 	file = shmat(shmid,NULL,0);
 	DIR *actual = opendir(route);
 	if(actual != NULL){
 		struct dirent *aux;
 		while((aux = readdir(actual)) != NULL){
-			strncpy(file[i].name,aux->d_name,MAX_NAME_FOLD-1);
-			file[i].status = 1;
-			i++;
+			strncpy(file[*i].name,aux->d_name,MAX_NAME_FOLD-1);
+			file[*i].status = 1;
+			(*i)++;
 		}
 	}
 	else{
@@ -137,6 +137,8 @@ int init(){
 	sem_t *mutex=NULL;
 	int error = 0;
 	int shmid;
+	int * nfiles = malloc(sizeof(int));
+	*nfiles = 0;
 
 	mutex = co_sem("mutex", RC);
 	if(mutex == NULL) {
@@ -158,7 +160,7 @@ int init(){
    		error  = ERROR_MM;
    	}
 
-   	map_folder("server/res/share",shmid,0);
+   	map_folder("server/res/share",shmid,nfiles);
 
 
    	/*Creation of the tail*/

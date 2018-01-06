@@ -56,6 +56,8 @@ void th_controller(int ptail){
 	int free = 0;
 	int end = 0;
 	res->error = 1;
+	int * nfiles = malloc(sizeof(int));
+	*nfiles = 0;
 
 	clavem=ftok("server/res/share/.",'A');
 	shmid = co_mm(clavem,TAM_MEMORY);
@@ -64,6 +66,7 @@ void th_controller(int ptail){
 	if((file =shmat(shmid,NULL,0)) == (File *)-1)
 		printf("Error al mapear la memoria compartida\n");
 	else{
+		map_folder(DEST_PUBLIC_PATH, shmid, nfiles);
 		while(!end) {
 			msgrcv(ptail, opt, MAX_OPT_SIZE,REQ,0);
 			if(opt->cmd != END) {
@@ -131,16 +134,22 @@ void th_controller(int ptail){
 						switch(opt->cmd) {
 							/*MOVE FILE*/
 							case MOVE:
-								res->error = move(org,dest);
+								if(opt->ud && ((*nfiles-3) >= MAX_FILES)) {
+									res->error = 10;
+								}
+								else
+									res->error = move(org,dest);								
 								break;
 							/*DELETE FILE*/
 							case DELETE:
 								res->error = dlt(DEST_PUBLIC_PATH, opt->file);
 								break;
 						}
-					sem_wait(mutex);
-					nused(opt->file, file);
-					sem_post(mutex);
+
+						*nfiles = 0;
+						sem_wait(mutex);
+						map_folder(DEST_PUBLIC_PATH, shmid, nfiles);
+						sem_post(mutex);
 					}
 				}
 				res->mtype = RES;

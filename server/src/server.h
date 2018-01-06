@@ -136,7 +136,7 @@ int dt_mm(int shmid);
 
 
 /*Map the share memory with all the files in the route since the variable i. Return the share memory mapped*/
-File *map_folder(char* route, int shmid, int i);
+File *map_folder(char* route, int shmid, int * i);
 
 /*Search if the file with the same name that "name" is free and return the status*/
 int used(char *name, File *file);

@@ -8,7 +8,7 @@
 
 #define NO_ERROR 0
 #define TAM_RT 100
-#define FAIL -1
+#define FAIL 1
 #define ERROR_OPEN0 1
 #define ERROR_OPEND 4
 #define ERROR_FSTAT 2

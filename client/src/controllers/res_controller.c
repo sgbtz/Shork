@@ -55,8 +55,11 @@ void move(int tail, unsigned scope, User * user, unsigned ud) {
 	// Wait for a response
 	msgrcv(tail, res, MAX_RES_SIZE, RES, 0);
 	// Check if the operation had success
-	if (res->error)
+	if (res->error){
 		printf("Operation MOVE couldn't be completed!\n");
+		if (res->error == 10)
+			printf("Max number of files has been reached\n");
+	}
 	else
 		printf("Operation MOVE completed successfully!\n");
 }
