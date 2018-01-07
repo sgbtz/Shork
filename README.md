@@ -3,19 +3,20 @@ Preparación y funcionamiento.
 
 A continuación exponemos los distintos pasos a seguir para la preparación y ejecución del programa:
 
-Compilación
+#Compilación
 
 Se ha hecho una simplificación importante del proceso de compilación haciendo uso de un archivo makefile. En primer lugar, ejecutar a través de la terminal en el directorio principal (Shork/) el comando make delete para asegurar la actualización de los ejecutables. Después, proceder a compilar ejecutando de la misma forma make o make shork, automáticamente se comprobarán los ficheros necesarios y se crearán los ejecutables client y server en las carpetas client/bin y server/bin respectivamente.
-Depuración
+
+#Depuración
 
 Para facilitar el proceso de desarrollo del proyecto se ha añadido también la instrucción make debug, la cual compila permitiendo depurar después con GDB.
 La depuración se ha abreviado teniendo que ejecutar sólo los ficheros shell script debug_client.sh y debug_server.sh para empezar a depurar cliente y servidor.
 
-Ejecución
+#Ejecución
 
 Como indicamos anteriormente, la compilación genera los dos archivos ejecutables client y server, los cuales pueden ejecutarse fácilmente con los ficheros shell script client.sh y server.sh respectivamente; esto se hizo para evitar tener que introducir la ruta de cada ejecutable en cada ejecución, de forma similar a como se ha hecho con la depuración.
 
-Funcionamiento
+#Funcionamiento
 
 En esta sección explicaremos cómo funciona la aplicación, tanto la parte del cliente como la del servidor y su administración.
 
